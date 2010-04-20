@@ -4689,7 +4689,6 @@ int main (int argc, char **argv) {
     drop_privileges();
 
     /* enter the event loop */
-	fprintf(stdout, "Entering main loop\n");
     event_base_loop(main_base, 0);
 
     stop_assoc_maintenance_thread();
