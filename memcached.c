@@ -195,6 +195,10 @@ static void settings_init(void) {
     settings.backlog = 1024;
     settings.binding_protocol = negotiating_prot;
     settings.item_size_max = 1024 * 1024; /* The famous 1MB upper limit. */
+#ifdef HTTP
+	settings.http_addr = "127.0.0.1";
+	settings.http_port = 7890;
+#endif
 }
 
 /*
@@ -4191,6 +4195,9 @@ static void remove_pidfile(const char *pid_file) {
 }
 
 static void sig_handler(const int sig) {
+#ifdef HTTP
+	stop_http();
+#endif
     printf("SIGINT handled.\n");
     exit(EXIT_SUCCESS);
 }
@@ -4674,10 +4681,15 @@ int main (int argc, char **argv) {
         }
     }
 
+#ifdef HTTP
+	start_http(settings.http_addr, settings.http_port, main_base);
+#endif
+	
     /* Drop privileges no longer needed */
     drop_privileges();
 
     /* enter the event loop */
+	fprintf(stdout, "Entering main loop\n");
     event_base_loop(main_base, 0);
 
     stop_assoc_maintenance_thread();
@@ -4692,6 +4704,7 @@ int main (int argc, char **argv) {
       free(l_socket);
     if (u_socket)
       free(u_socket);
+
 
     return EXIT_SUCCESS;
 }

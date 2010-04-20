@@ -23,6 +23,10 @@
 
 #include "sasl_defs.h"
 
+#ifdef HTTP
+#include "http.h"
+#endif
+
 /** Maximum length of a key. */
 #define KEY_MAX_LENGTH 250
 
@@ -275,6 +279,10 @@ struct settings {
     int backlog;
     int item_size_max;        /* Maximum item size, and upper end for slabs */
     bool sasl;              /* SASL on/off */
+#ifdef HTTP
+	char *http_addr; /* Address to bind the http interface to */
+	int http_port; /* Port to bind the http interface to */
+#endif
 };
 
 extern struct stats stats;

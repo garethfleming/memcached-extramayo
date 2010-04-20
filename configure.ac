@@ -479,6 +479,10 @@ AC_CHECK_HEADER(umem.h, [
 
 AM_CONDITIONAL([BUILD_CACHE], [test "x$build_cache" = "xyes"])
 
+AC_ARG_ENABLE(http,
+  [AS_HELP_STRING([--enable-http],[Enable http interface])])
+AM_CONDITIONAL([BUILD_HTTP], [test "x$enable_http" = "xyes"])
+
 AC_ARG_ENABLE(docs,
   [AS_HELP_STRING([--disable-docs],[Disable documentation generation])])
 

@@ -23,6 +23,11 @@ memcached_SOURCES += cache.c
 testapp_SOURCES += cache.c
 endif
 
+if BUILD_HTTP
+memcached_SOURCES += http.c
+CFLAGS += -DHTTP
+endif
+
 if BUILD_SOLARIS_PRIVS
 memcached_SOURCES += solaris_priv.c
 endif
