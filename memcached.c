@@ -47,6 +47,10 @@
 #include <sysexits.h>
 #include <stddef.h>
 
+#ifdef HTTP
+#include "http.h"
+#endif
+
 /* FreeBSD 4.x doesn't have IOV_MAX exposed. */
 #ifndef IOV_MAX
 #if defined(__FreeBSD__) || defined(__APPLE__)
@@ -4093,6 +4097,9 @@ static void usage(void) {
 #ifdef ENABLE_SASL
     printf("-S            Turn on Sasl authentication\n");
 #endif
+#ifdef HTTP
+    printf("-H <port>     Set the HTTP port to bind to.\n");
+#endif
     return;
 }
 
@@ -4315,6 +4322,9 @@ int main (int argc, char **argv) {
           "B:"  /* Binding protocol */
           "I:"  /* Max item size */
           "S"   /* Sasl ON */
+#ifdef HTTP
+		  "H:" /* HTTP port to bind to */
+#endif
         ))) {
         switch (c) {
         case 'a':
@@ -4356,6 +4366,7 @@ int main (int argc, char **argv) {
             break;
         case 'l':
             settings.inter= strdup(optarg);
+			settings.http_addr = strdup(optarg);
             break;
         case 'd':
             do_daemonize = true;
@@ -4477,6 +4488,11 @@ int main (int argc, char **argv) {
 #endif
             settings.sasl = true;
             break;
+#ifdef HTTP
+		case 'H': /* set the http preferences */
+			settings.http_port = atoi(optarg);
+			break;
+#endif
         default:
             fprintf(stderr, "Illegal argument \"%c\"\n", c);
             return 1;

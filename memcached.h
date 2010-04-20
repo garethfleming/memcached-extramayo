@@ -23,10 +23,6 @@
 
 #include "sasl_defs.h"
 
-#ifdef HTTP
-#include "http.h"
-#endif
-
 /** Maximum length of a key. */
 #define KEY_MAX_LENGTH 250
 

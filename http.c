@@ -14,8 +14,7 @@ typedef struct evhttp_request* http_request_t;
 static void handler(http_request_t, void*);
 
 /* API functions */
-int start_http(char *addr, int port, event_base_t eventbase)
-{
+int start_http(char *addr, int port, event_base_t eventbase) {
 	event_init();
 	httpd = evhttp_new(eventbase);
 	evhttp_bind_socket(httpd, addr, port);
@@ -23,8 +22,7 @@ int start_http(char *addr, int port, event_base_t eventbase)
 	return 0;
 }
 
-int stop_http()
-{
+int stop_http() {
 	evhttp_free(httpd);
 	return 0;
 }
@@ -46,8 +44,7 @@ static const char *kSEARCH_PAGE = "<html><head><title>Memcache Search</head><bod
  * The main request handler function. Routes to another function based
  * on the request type. 
  */
-static void handler(http_request_t request, void *arg)
-{
+static void handler(http_request_t request, void *arg) {
 	if (request->kind == EVHTTP_REQ_GET) {
 		handle_get(request, arg);
 	}
@@ -64,8 +61,7 @@ static void handler(http_request_t request, void *arg)
  * search page. Otherwise, the rest of the uri is taken to be the key
  * being searched for.
  */
-static void handle_get(http_request_t request, void *arg)
-{
+static void handle_get(http_request_t request, void *arg) {
 	char *key;
 	char *value;
 	item *item;
@@ -90,8 +86,7 @@ static void handle_get(http_request_t request, void *arg)
  * Handler for POST requests. This function sets a value in the cache
  * based on the key and value passed in the body of this request.
  */
-static void handle_post(http_request_t request, void *arg)
-{
+static void handle_post(http_request_t request, void *arg) {
 	char *buffer;
 	buffer = evbuffer_readline(request->input_buffer);
 	printf("You sent '%s'\n", buffer);
@@ -101,8 +96,7 @@ static void handle_post(http_request_t request, void *arg)
 /*
  * Sends a response back to the client.
  */
-static void reply(http_request_t request, const char *body)
-{	
+static void reply(http_request_t request, const char *body) {	
 	struct evbuffer *buffer;
 	buffer = evbuffer_new();
 	evbuffer_add_printf(buffer, "%s", body);
@@ -113,8 +107,7 @@ static void reply(http_request_t request, const char *body)
 /*
  * Responds with the search page.
  */
-static void reply_with_search_page(http_request_t request)
-{
+static void reply_with_search_page(http_request_t request) {
 	evhttp_add_header(request->output_headers, "Content-Type", "text/html");
 	reply(request, kSEARCH_PAGE);
 }
@@ -122,8 +115,7 @@ static void reply_with_search_page(http_request_t request)
 /*
  * Looks up a key in the cache and responds with the value.
  */
-static void reply_with_value(http_request_t request, const char *key, const char *value)
-{	
+static void reply_with_value(http_request_t request, const char *key, const char *value) {	
 	char *body;
 	int body_size;
 	body_size = strlen(key) + strlen(value) + strlen("{'':''}\n") + 1;
