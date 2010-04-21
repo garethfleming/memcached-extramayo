@@ -38,7 +38,7 @@ static void reply_with_value(http_request_t, const char*, const char*);
 /* This isn't defined in evhttp.h */
 #define HTTP_METHOD_NOT_ALLOWED 405
 
-static const char *kSEARCH_PAGE = "<html><head><title>Memcache Search</head><body></body></html>";
+static const char *kSearchPage = "<html><head><title>Memcache Search</head><body></body></html>";
 
 /* 
  * The main request handler function. Routes to another function based
@@ -109,7 +109,7 @@ static void reply(http_request_t request, const char *body) {
  */
 static void reply_with_search_page(http_request_t request) {
 	evhttp_add_header(request->output_headers, "Content-Type", "text/html");
-	reply(request, kSEARCH_PAGE);
+	reply(request, kSearchPage);
 }
 
 /*
