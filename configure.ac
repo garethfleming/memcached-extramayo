@@ -483,6 +483,10 @@ AC_ARG_ENABLE(http,
   [AS_HELP_STRING([--enable-http],[Enable http interface])])
 AM_CONDITIONAL([BUILD_HTTP], [test "x$enable_http" = "xyes"])
 
+AC_ARG_ENABLE(xmpp,
+  [AS_HELP_STRING([--enable-xmpp], [Enable xmpp for update publishing])])
+AM_CONDITIONAL([BUILD_XMPP], [test "x$enable_xmpp" = "xyes"])
+
 AC_ARG_ENABLE(docs,
   [AS_HELP_STRING([--disable-docs],[Disable documentation generation])])
 

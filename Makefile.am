@@ -28,6 +28,11 @@ memcached_SOURCES += http.c
 CFLAGS += -DHTTP
 endif
 
+if BUILD_XMPP
+memcached_SOURCES += xmpp.c
+CFLAGS += -DXMPP
+endif
+
 if BUILD_SOLARIS_PRIVS
 memcached_SOURCES += solaris_priv.c
 endif
