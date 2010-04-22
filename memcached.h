@@ -279,6 +279,10 @@ struct settings {
 	char *http_addr; /* Address to bind the http interface to */
 	int http_port; /* Port to bind the http interface to */
 #endif
+#ifdef XMPP
+	char *xmpp_jid; /* The XMPP jid used to login to the XMPP server */
+	char *xmpp_pass; /* The password used to login to the XMPP server */
+#endif
 };
 
 extern struct stats stats;

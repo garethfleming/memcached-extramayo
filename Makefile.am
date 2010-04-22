@@ -31,6 +31,7 @@ endif
 if BUILD_XMPP
 memcached_SOURCES += xmpp.c
 CFLAGS += -DXMPP
+LIBS += -lxml2 -lresolv -lstrophe -lssl
 endif
 
 if BUILD_SOLARIS_PRIVS

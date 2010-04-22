@@ -51,6 +51,10 @@
 #include "http.h"
 #endif
 
+#ifdef XMPP
+#include "xmpp.h"
+#endif
+
 /* FreeBSD 4.x doesn't have IOV_MAX exposed. */
 #ifndef IOV_MAX
 #if defined(__FreeBSD__) || defined(__APPLE__)
@@ -202,6 +206,10 @@ static void settings_init(void) {
 #ifdef HTTP
 	settings.http_addr = "127.0.0.1";
 	settings.http_port = 7890;
+#endif
+#ifdef XMPP
+	settings.xmpp_jid = NULL;
+	settings.xmpp_pass = NULL;
 #endif
 }
 
@@ -4098,7 +4106,11 @@ static void usage(void) {
     printf("-S            Turn on Sasl authentication\n");
 #endif
 #ifdef HTTP
-    printf("-H <port>     Set the HTTP port to bind to.\n");
+    printf("-H <port>     Set the HTTP port to bind to (default: 7890)\n");
+#endif
+#ifdef XMPP
+	printf("-j <jid>      Set the JID used to log into the XMPP server\n");
+	printf("-J <pass>     Set the password used to log into the XMPP server\n");
 #endif
     return;
 }
@@ -4325,6 +4337,10 @@ int main (int argc, char **argv) {
 #ifdef HTTP
 		  "H:" /* HTTP port to bind to */
 #endif
+#ifdef XMPP
+		  "j:" /* The xmpp jid */
+		  "J:" /* The xmpp password */
+#endif
         ))) {
         switch (c) {
         case 'a':
@@ -4366,7 +4382,9 @@ int main (int argc, char **argv) {
             break;
         case 'l':
             settings.inter= strdup(optarg);
+#ifdef HTTP
 			settings.http_addr = strdup(optarg);
+#endif
             break;
         case 'd':
             do_daemonize = true;
@@ -4491,6 +4509,14 @@ int main (int argc, char **argv) {
 #ifdef HTTP
 		case 'H': /* set the http preferences */
 			settings.http_port = atoi(optarg);
+			break;
+#endif
+#ifdef XMPP
+		case 'j':
+			settings.xmpp_jid = strdup(optarg);
+			break;
+		case 'J':
+			settings.xmpp_pass = strdup(optarg);
 			break;
 #endif
         default:
@@ -4699,6 +4725,13 @@ int main (int argc, char **argv) {
 
 #ifdef HTTP
 	start_http(settings.http_addr, settings.http_port, main_base);
+#endif
+
+#ifdef XMPP
+	if (settings.xmpp_jid != NULL && settings.xmpp_pass != NULL) {
+		vperror("No XMPP authorization properties provided. No connection attempted.");
+		start_xmpp(settings.xmpp_jid, settings.xmpp_pass);
+	}
 #endif
 	
     /* Drop privileges no longer needed */
